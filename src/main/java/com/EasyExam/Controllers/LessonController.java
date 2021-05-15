@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
 
-@CrossOrigin("http://192.168.0.109:8081")
+@CrossOrigin("http://localhost:8081")
 @RestController
 @RequestMapping("lesson")
 public class LessonController {

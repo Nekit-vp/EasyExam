@@ -4,11 +4,15 @@ public class User extends BaseEntity{
 
     private String login;
     private String password;
+    private Boolean user_role;
 
-    public User(Integer id, String login, String password) {
+
+
+    public User(Integer id, String login, String password, Boolean user_role) {
         super(id);
         this.login = login;
         this.password = password;
+        this.user_role = user_role;
     }
 
     public String getLogin() {
@@ -25,5 +29,13 @@ public class User extends BaseEntity{
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public boolean isUser_role() {
+        return user_role;
+    }
+
+    public void setUser_role(boolean user_role) {
+        this.user_role = user_role;
     }
 }

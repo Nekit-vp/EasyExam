@@ -19,26 +19,26 @@ public class UserRepository implements IRestRepository<User> {
         this.jdbcOperations = jdbcOperations;
     }
 
-    private static final String selectQuery = "SELECT \"id\", \"login\", \"password\" " +
+    private static final String selectQuery = "SELECT \"id\", \"login\", \"password\" , \"user_role\" " +
             "FROM \"users\" " +
             "ORDER BY \"id\"";
 
-    private static final String selectByIdQuery = "SELECT \"id\", \"login\", \"password\" " +
+    private static final String selectByIdQuery = "SELECT \"id\", \"login\", \"password\" , \"user_role\" " +
             "FROM \"users\" " +
             "WHERE \"id\" = ?";
 
-    private static final String insertQuery = "INSERT INTO \"users\"(\"login\", \"password\") " +
-            "VALUES (?, ?) " +
-            "RETURNING \"id\", \"login\", \"password\"";
+    private static final String insertQuery = "INSERT INTO \"users\"(\"login\", \"password\" , \"user_role\") " +
+            "VALUES (?, ?, ?) " +
+            "RETURNING \"id\", \"login\", \"password\" , \"user_role\" ";
 
     private static final String updateQuery = "UPDATE \"users\" " +
-            "SET \"login\" = ?, \"password\" = ? " +
+            "SET \"login\" = ?, \"password\" = ? , \"user_role\" = ? " +
             "WHERE \"id\" = ? " +
-            "RETURNING \"id\", \"login\", \"password\"";
+            "RETURNING \"id\", \"login\", \"password\" , \"user_role\" ";
 
     private static final String deleteQuery = "DELETE FROM \"users\" " +
             "WHERE \"id\" = ? " +
-            "RETURNING \"id\", \"login\", \"password\"";
+            "RETURNING \"id\", \"login\", \"password\" , \"user_role\" ";
 
     @Override
     public User[] select() {
@@ -48,7 +48,8 @@ public class UserRepository implements IRestRepository<User> {
             values.add(new User(
                     sqlRowSet.getInt(1),
                     sqlRowSet.getString(2),
-                    sqlRowSet.getString(3)));
+                    sqlRowSet.getString(3),
+                    sqlRowSet.getBoolean(4)));
         }
         User[] result = new User[values.size()];
         result = values.toArray(result);
@@ -66,13 +67,14 @@ public class UserRepository implements IRestRepository<User> {
         return new User(
                 sqlrowSet.getInt(1),
                 sqlrowSet.getString(2),
-                sqlrowSet.getString(3));
+                sqlrowSet.getString(3),
+                sqlrowSet.getBoolean(4));
     }
 
     @Override
     public User insert(User entity) {
-        Object[] params = new Object[]{entity.getLogin(), entity.getPassword()};
-        int[] types = new int[]{Types.VARCHAR,Types.VARCHAR};
+        Object[] params = new Object[]{entity.getLogin(), entity.getPassword(), entity.isUser_role()};
+        int[] types = new int[]{Types.VARCHAR,Types.VARCHAR, Types.BOOLEAN};
         SqlRowSet rowSet = jdbcOperations.queryForRowSet(insertQuery, params, types);
         if (!rowSet.next()) {
             return null;
@@ -80,13 +82,14 @@ public class UserRepository implements IRestRepository<User> {
         return new User(
                 rowSet.getInt(1),
                 rowSet.getString(2),
-                rowSet.getString(3));
+                rowSet.getString(3),
+                rowSet.getBoolean(4));
     }
 
     @Override
     public User update(Integer id, User entity) {
-        Object[] params = new Object[] {entity.getLogin(), entity.getPassword(), id };
-        int[] types = new int[] {Types.VARCHAR,Types.VARCHAR, Types.INTEGER };
+        Object[] params = new Object[] {entity.getLogin(), entity.getPassword(), entity.isUser_role(), id };
+        int[] types = new int[] {Types.VARCHAR,Types.VARCHAR,Types.BOOLEAN,  Types.INTEGER};
         SqlRowSet rowSet = jdbcOperations.queryForRowSet(updateQuery, params, types);
         if (!rowSet.next()) {
             return null;
@@ -94,7 +97,8 @@ public class UserRepository implements IRestRepository<User> {
         return new User(
                 rowSet.getInt(1),
                 rowSet.getString(2),
-                rowSet.getString(3));
+                rowSet.getString(3),
+                rowSet.getBoolean(4));
     }
 
     @Override
@@ -108,6 +112,7 @@ public class UserRepository implements IRestRepository<User> {
         return new User(
                 rowSet.getInt(1),
                 rowSet.getString(2),
-                rowSet.getString(3));
+                rowSet.getString(3),
+                rowSet.getBoolean(4));
     }
 }

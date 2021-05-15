@@ -7,6 +7,7 @@ public class UserResource extends BaseResource {
     private Integer id;
     private String login;
     private String password;
+    private Boolean user_role;
 
     public UserResource() {
     }
@@ -15,13 +16,24 @@ public class UserResource extends BaseResource {
         this.id = user.getId();
         this.login = user.getLogin();
         this.password = user.getPassword();
+        this.user_role = user.isUser_role();
+
+    }
+
+    public Boolean getUser_role() {
+        return user_role;
+    }
+
+    public void setUser_role(Boolean user_role) {
+        this.user_role = user_role;
     }
 
     public User toEntity(){
         return new User(
                 this.id,
                 this.login,
-                this.password
+                this.password,
+                this.user_role
         );
     }
 

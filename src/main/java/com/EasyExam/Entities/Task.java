@@ -14,8 +14,6 @@ public class Task extends BaseEntity {
         this.answer = answer;
         this.complexity = complexity;
     }
-
-
     public Integer getId_topic() {
         return id_topic;
     }
